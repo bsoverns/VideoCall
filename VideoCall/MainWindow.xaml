@@ -1,0 +1,79 @@
+﻿<Window x:Class="VideoCall.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VideoCall"
+        mc:Ignorable="d"
+        Title="Virtual Meeting" Height="600" Width="800"
+        Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Title and Connection Status -->
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="10">
+            <TextBlock Text="Video Call" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" />
+            <TextBlock Text=" - " FontSize="24" VerticalAlignment="Center" />
+            <TextBlock Text="Not Connected" Name="ConnectionStatus" FontSize="16" VerticalAlignment="Center" />
+        </StackPanel>
+
+        <!-- Main Video Display Area for the other party -->
+        <Grid Grid.Row="1" Grid.Column="0" Margin="10">
+            <Border BorderBrush="Gray" BorderThickness="1">
+                <Grid Name="MainVideoGrid">
+                    <TextBlock Text="Main Video Stream Here" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <!-- Local Video Display Area -->
+                    <Border BorderBrush="Gray" BorderThickness="1" Width="200" Height="150" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10">
+                        <Image Name="LocalVideoImage" Stretch="Fill" />
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Chat and Participants Area -->
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="10">
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="Chat" FontSize="16" FontWeight="Bold" Margin="5" />
+                    <ScrollViewer Height="200">
+                        <StackPanel Name="ChatMessages">
+                            <!-- Placeholder for chat messages -->
+                            <TextBlock Text="Chat messages will appear here." />
+                        </StackPanel>
+                    </ScrollViewer>
+                    <TextBox Name="ChatInput" Margin="5" />
+                    <Button Content="Send" Name="SendChatButton" Margin="5" Click="SendChatButton_Click" />
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="Gray" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Participants" FontSize="16" FontWeight="Bold" Margin="5" />
+                    <ListBox Name="ParticipantsList" Margin="5">
+                        <!-- Placeholder for participants list -->
+                        <ListBoxItem Content="Participant 1" />
+                        <ListBoxItem Content="Participant 2" />
+                    </ListBox>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- Controls Area -->
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Connect" Name="ConnectButton" Margin="5" Click="ConnectButton_Click" />
+            <Button Content="Disconnect" Name="DisconnectButton" Margin="5" Click="DisconnectButton_Click" IsEnabled="False" />
+            <Button Content="Start Server" Name="StartServerButton" Margin="5" Click="StartServerButton_Click" />
+            <Button Content="Stop Server" Name="StopServerButton" Margin="5" Click="StopServerButton_Click" IsEnabled="False" />
+            <TextBox Name="ServerIPTextBox" Width="150" Margin="5" VerticalAlignment="Center" />
+            <Button Content="Mute" Name="MuteButton" Margin="5" Click="MuteButton_Click" />
+            <Button Content="Video On/Off" Name="VideoButton" Margin="5" Click="VideoButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>
