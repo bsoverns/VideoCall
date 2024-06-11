@@ -29,7 +29,8 @@
         <Grid Grid.Row="1" Grid.Column="0" Margin="10">
             <Border BorderBrush="Gray" BorderThickness="1">
                 <Grid Name="MainVideoGrid">
-                    <TextBlock Text="Main Video Stream Here" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Image Name="MainVideoImage" Stretch="Fill" />
+                    <!-- <TextBlock Text="Main Video Stream Here" HorizontalAlignment="Center" VerticalAlignment="Center" /> -->
                     <!-- Local Video Display Area -->
                     <Border BorderBrush="Gray" BorderThickness="1" Width="200" Height="150" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10">
                         <Image Name="LocalVideoImage" Stretch="Fill" />
