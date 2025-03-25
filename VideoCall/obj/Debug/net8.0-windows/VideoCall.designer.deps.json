@@ -36,34 +36,38 @@
           }
         }
       },
-      "Microsoft.Win32.SystemEvents/9.0.0-preview.4.24266.19": {
+      "Microsoft.Win32.SystemEvents/10.0.0-preview.2.25163.2": {
         "runtime": {
           "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.26619"
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.16302"
           }
         },
         "runtimeTargets": {
           "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
             "rid": "win",
             "assetType": "runtime",
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.26619"
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.16302"
           }
         }
       },
-      "System.Drawing.Common/9.0.0-preview.4.24267.1": {
+      "System.Drawing.Common/10.0.0-preview.2.25163.9": {
         "dependencies": {
-          "Microsoft.Win32.SystemEvents": "9.0.0-preview.4.24266.19"
+          "Microsoft.Win32.SystemEvents": "10.0.0-preview.2.25163.2"
         },
         "runtime": {
           "lib/net8.0/System.Drawing.Common.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.26701"
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.16309"
           },
           "lib/net8.0/System.Private.Windows.Core.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.26701"
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.16309"
+          },
+          "lib/net8.0/System.Private.Windows.GdiPlus.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.16309"
           }
         }
       }
@@ -91,19 +95,19 @@
       "path": "aforge.video.directshow/2.2.5",
       "hashPath": "aforge.video.directshow.2.2.5.nupkg.sha512"
     },
-    "Microsoft.Win32.SystemEvents/9.0.0-preview.4.24266.19": {
+    "Microsoft.Win32.SystemEvents/10.0.0-preview.2.25163.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-rof/2ZT8nv/kc7Xf3y9bsyVnCzi3ZkDrGVUeNb0Gg0AMWqe8uRHZ2DJeHrhTmcbacnMX4c8Vn+Pq7GUtjqb+KA==",
-      "path": "microsoft.win32.systemevents/9.0.0-preview.4.24266.19",
-      "hashPath": "microsoft.win32.systemevents.9.0.0-preview.4.24266.19.nupkg.sha512"
+      "sha512": "sha512-mxiOcPPagclphFgGgR/njsi8MAq/YUnlDBu2A0ek7wiQAUDl4I8pDPWrNsM/PEj0GxMa+M4xSVHqJqp5Bzxv1g==",
+      "path": "microsoft.win32.systemevents/10.0.0-preview.2.25163.2",
+      "hashPath": "microsoft.win32.systemevents.10.0.0-preview.2.25163.2.nupkg.sha512"
     },
-    "System.Drawing.Common/9.0.0-preview.4.24267.1": {
+    "System.Drawing.Common/10.0.0-preview.2.25163.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-JDaMkhAZ9jtFc06NFnrcPYGzF+N1SiQynDDraw2y+qsfkVIsMUonN4RG0YSkUpxB6QI7mXdcPQcY5ebDfBSYzQ==",
-      "path": "system.drawing.common/9.0.0-preview.4.24267.1",
-      "hashPath": "system.drawing.common.9.0.0-preview.4.24267.1.nupkg.sha512"
+      "sha512": "sha512-U080IdRYQmBuO88KOM9d3T/SjBjSm5geGImBW/8WxFbTnctSkqxgj7Qq+ngkBVsEGBYRTdcqy07+q57thfkrFQ==",
+      "path": "system.drawing.common/10.0.0-preview.2.25163.9",
+      "hashPath": "system.drawing.common.10.0.0-preview.2.25163.9.nupkg.sha512"
     }
   }
 }

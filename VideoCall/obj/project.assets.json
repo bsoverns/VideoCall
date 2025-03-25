@@ -35,7 +35,7 @@
           "lib/AForge.Video.DirectShow.dll": {}
         }
       },
-      "Microsoft.Win32.SystemEvents/9.0.0-preview.4.24266.19": {
+      "Microsoft.Win32.SystemEvents/10.0.0-preview.2.25163.2": {
         "type": "package",
         "compile": {
           "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
@@ -57,16 +57,19 @@
           }
         }
       },
-      "System.Drawing.Common/9.0.0-preview.4.24267.1": {
+      "System.Drawing.Common/10.0.0-preview.2.25163.9": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Win32.SystemEvents": "9.0.0-preview.4.24266.19"
+          "Microsoft.Win32.SystemEvents": "10.0.0-preview.2.25163.2"
         },
         "compile": {
           "lib/net8.0/System.Drawing.Common.dll": {
             "related": ".pdb;.xml"
           },
           "lib/net8.0/System.Private.Windows.Core.dll": {
+            "related": ".xml"
+          },
+          "lib/net8.0/System.Private.Windows.GdiPlus.dll": {
             "related": ".xml"
           }
         },
@@ -75,6 +78,9 @@
             "related": ".pdb;.xml"
           },
           "lib/net8.0/System.Private.Windows.Core.dll": {
+            "related": ".xml"
+          },
+          "lib/net8.0/System.Private.Windows.GdiPlus.dll": {
             "related": ".xml"
           }
         },
@@ -124,10 +130,10 @@
         "lib/AForge.Video.DirectShow.xml"
       ]
     },
-    "Microsoft.Win32.SystemEvents/9.0.0-preview.4.24266.19": {
-      "sha512": "rof/2ZT8nv/kc7Xf3y9bsyVnCzi3ZkDrGVUeNb0Gg0AMWqe8uRHZ2DJeHrhTmcbacnMX4c8Vn+Pq7GUtjqb+KA==",
+    "Microsoft.Win32.SystemEvents/10.0.0-preview.2.25163.2": {
+      "sha512": "mxiOcPPagclphFgGgR/njsi8MAq/YUnlDBu2A0ek7wiQAUDl4I8pDPWrNsM/PEj0GxMa+M4xSVHqJqp5Bzxv1g==",
       "type": "package",
-      "path": "microsoft.win32.systemevents/9.0.0-preview.4.24266.19",
+      "path": "microsoft.win32.systemevents/10.0.0-preview.2.25163.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -139,6 +145,8 @@
         "buildTransitive/net462/_._",
         "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/Microsoft.Win32.SystemEvents.targets",
+        "lib/net10.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net10.0/Microsoft.Win32.SystemEvents.xml",
         "lib/net462/Microsoft.Win32.SystemEvents.dll",
         "lib/net462/Microsoft.Win32.SystemEvents.xml",
         "lib/net8.0/Microsoft.Win32.SystemEvents.dll",
@@ -147,8 +155,10 @@
         "lib/net9.0/Microsoft.Win32.SystemEvents.xml",
         "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
         "lib/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
-        "microsoft.win32.systemevents.9.0.0-preview.4.24266.19.nupkg.sha512",
+        "microsoft.win32.systemevents.10.0.0-preview.2.25163.2.nupkg.sha512",
         "microsoft.win32.systemevents.nuspec",
+        "runtimes/win/lib/net10.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net10.0/Microsoft.Win32.SystemEvents.xml",
         "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll",
         "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.xml",
         "runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.dll",
@@ -156,10 +166,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.Drawing.Common/9.0.0-preview.4.24267.1": {
-      "sha512": "JDaMkhAZ9jtFc06NFnrcPYGzF+N1SiQynDDraw2y+qsfkVIsMUonN4RG0YSkUpxB6QI7mXdcPQcY5ebDfBSYzQ==",
+    "System.Drawing.Common/10.0.0-preview.2.25163.9": {
+      "sha512": "U080IdRYQmBuO88KOM9d3T/SjBjSm5geGImBW/8WxFbTnctSkqxgj7Qq+ngkBVsEGBYRTdcqy07+q57thfkrFQ==",
       "type": "package",
-      "path": "system.drawing.common/9.0.0-preview.4.24267.1",
+      "path": "system.drawing.common/10.0.0-preview.2.25163.9",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -173,6 +183,13 @@
         "buildTransitive/netcoreapp2.0/System.Drawing.Common.targets",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
+        "lib/net10.0/System.Drawing.Common.dll",
+        "lib/net10.0/System.Drawing.Common.pdb",
+        "lib/net10.0/System.Drawing.Common.xml",
+        "lib/net10.0/System.Private.Windows.Core.dll",
+        "lib/net10.0/System.Private.Windows.Core.xml",
+        "lib/net10.0/System.Private.Windows.GdiPlus.dll",
+        "lib/net10.0/System.Private.Windows.GdiPlus.xml",
         "lib/net462/System.Drawing.Common.dll",
         "lib/net462/System.Drawing.Common.pdb",
         "lib/net462/System.Drawing.Common.xml",
@@ -181,11 +198,15 @@
         "lib/net8.0/System.Drawing.Common.xml",
         "lib/net8.0/System.Private.Windows.Core.dll",
         "lib/net8.0/System.Private.Windows.Core.xml",
+        "lib/net8.0/System.Private.Windows.GdiPlus.dll",
+        "lib/net8.0/System.Private.Windows.GdiPlus.xml",
         "lib/net9.0/System.Drawing.Common.dll",
         "lib/net9.0/System.Drawing.Common.pdb",
         "lib/net9.0/System.Drawing.Common.xml",
         "lib/net9.0/System.Private.Windows.Core.dll",
         "lib/net9.0/System.Private.Windows.Core.xml",
+        "lib/net9.0/System.Private.Windows.GdiPlus.dll",
+        "lib/net9.0/System.Private.Windows.GdiPlus.xml",
         "lib/netstandard2.0/System.Drawing.Common.dll",
         "lib/netstandard2.0/System.Drawing.Common.pdb",
         "lib/netstandard2.0/System.Drawing.Common.xml",
@@ -193,7 +214,7 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "system.drawing.common.9.0.0-preview.4.24267.1.nupkg.sha512",
+        "system.drawing.common.10.0.0-preview.2.25163.9.nupkg.sha512",
         "system.drawing.common.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -203,7 +224,7 @@
     "net8.0-windows7.0": [
       "AForge.Video >= 2.2.5",
       "AForge.Video.DirectShow >= 2.2.5",
-      "System.Drawing.Common >= 9.0.0-preview.4.24267.1"
+      "System.Drawing.Common >= 10.0.0-preview.2.25163.9"
     ]
   },
   "packageFolders": {
@@ -213,11 +234,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Sandbox\\VideoCall\\VideoCall\\VideoCall.csproj",
+      "projectUniqueName": "C:\\Sandbox\\VideoCall\\VideoCall\\VideoCall.csproj",
       "projectName": "VideoCall",
-      "projectPath": "D:\\Sandbox\\VideoCall\\VideoCall\\VideoCall.csproj",
+      "projectPath": "C:\\Sandbox\\VideoCall\\VideoCall\\VideoCall.csproj",
       "packagesPath": "C:\\Users\\bsove\\.nuget\\packages\\",
-      "outputPath": "D:\\Sandbox\\VideoCall\\VideoCall\\obj\\",
+      "outputPath": "C:\\Sandbox\\VideoCall\\VideoCall\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -250,7 +271,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0-windows7.0": {
@@ -266,7 +288,7 @@
           },
           "System.Drawing.Common": {
             "target": "Package",
-            "version": "[9.0.0-preview.4.24267.1, )"
+            "version": "[10.0.0-preview.2.25163.9, )"
           }
         },
         "imports": [
@@ -288,7 +310,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   },

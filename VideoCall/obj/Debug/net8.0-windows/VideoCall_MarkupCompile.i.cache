@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-D:\Sandbox\VideoCall\VideoCall\obj\Debug\net8.0-windows\
+C:\Sandbox\VideoCall\VideoCall\obj\Debug\net8.0-windows\
 VideoCall
 none
 false
-TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-D:\Sandbox\VideoCall\VideoCall\App.xaml
+TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
+C:\Sandbox\VideoCall\VideoCall\App.xaml
 11407045341
 
 61935082913
-20366081451
+204-158914254
 MainWindow.xaml;
 
 False
