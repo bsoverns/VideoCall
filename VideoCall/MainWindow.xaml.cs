@@ -104,7 +104,8 @@ namespace VideoCall
             try
             {
                 var localIP = GetLocalIPAddress();
-                server = new TcpListener(localIP, 12345); // Default port 12345
+                //server = new TcpListener(localIP, 12345); // Default port 12345
+                server = new TcpListener(IPAddress.Any, 12345);
                 server.Start();
                 Task.Run(() => ListenForClients());
                 StartServerButton.IsEnabled = false;
@@ -184,7 +185,8 @@ namespace VideoCall
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
-        private void StartVideo()
+        //private void StartVideo()
+        private async void StartVideo()
         {
             try
             {
@@ -197,11 +199,36 @@ namespace VideoCall
                     return;
                 }
 
+                // Diagnostic: log camera devices found
+                for (int i = 0; i < videoDevices.Count; i++)
+                {
+                    Console.WriteLine($"Found video device: {videoDevices[i].Name}");
+                }
+
                 // Select the first video device
                 videoSource = new VideoCaptureDevice(videoDevices[0].MonikerString);
                 videoSource.NewFrame += VideoSource_NewFrame;
+
+                videoSource.VideoSourceError += (s, args) =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show($"Camera error: {args.Description}");
+                    });
+                };
+
+
                 videoSource.Start();
-                MessageBox.Show("Video started.");
+
+                await Task.Delay(500); // Give the source time to initialize
+
+                if (!videoSource.IsRunning)
+                {
+                    MessageBox.Show("Camera failed to start.");
+                }
+
+
+                //MessageBox.Show("Video started.");
             }
 
             catch (Exception ex)
@@ -219,18 +246,54 @@ namespace VideoCall
             }
         }
 
+        //private void VideoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        //{
+        //    lock (frameLock)
+        //    {
+        //        try
+        //        {
+        //            // Store the latest frame
+        //            if (latestFrame != null)
+        //            {
+        //                latestFrame.Dispose();
+        //            }
+        //            latestFrame = (System.Drawing.Bitmap)eventArgs.Frame.Clone();
+
+        //            // Display the image locally
+        //            Dispatcher.Invoke(() =>
+        //            {
+        //                LocalVideoImage.Source = BitmapToImageSource(latestFrame);
+        //            });
+
+        //            // Broadcast the frame to all connected clients
+        //            byte[] frameData = BitmapToByteArray(latestFrame);
+        //            BroadcastFrameToClients(frameData);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Dispatcher.Invoke(() =>
+        //            {
+        //                MessageBox.Show($"Error capturing frame: {ex.Message}");
+        //            });
+        //        }
+        //    }
+        //}
+
         private void VideoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             lock (frameLock)
             {
                 try
                 {
-                    // Store the latest frame
-                    if (latestFrame != null)
-                    {
-                        latestFrame.Dispose();
-                    }
-                    latestFrame = (System.Drawing.Bitmap)eventArgs.Frame.Clone();
+                    // Clone the frame before disposing of the old one
+                    var newFrame = (System.Drawing.Bitmap)eventArgs.Frame.Clone();
+
+                    // Swap the latest frame safely
+                    var oldFrame = latestFrame;
+                    latestFrame = newFrame;
+
+                    // Dispose of the old frame AFTER replacing it
+                    oldFrame?.Dispose();
 
                     // Display the image locally
                     Dispatcher.Invoke(() =>
@@ -238,7 +301,7 @@ namespace VideoCall
                         LocalVideoImage.Source = BitmapToImageSource(latestFrame);
                     });
 
-                    // Broadcast the frame to all connected clients
+                    // Send the frame to clients
                     byte[] frameData = BitmapToByteArray(latestFrame);
                     BroadcastFrameToClients(frameData);
                 }
@@ -252,16 +315,28 @@ namespace VideoCall
             }
         }
 
+        //private byte[] BitmapToByteArray(System.Drawing.Bitmap bitmap)
+        //{
+        //    using (var memory = new MemoryStream())
+        //    {
+        //        bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+        //        return memory.ToArray();
+        //    }
+        //}
 
         private byte[] BitmapToByteArray(System.Drawing.Bitmap bitmap)
         {
             using (var memory = new MemoryStream())
             {
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                using (var tempBitmap = new System.Drawing.Bitmap(bitmap)) // Create a copy to avoid access conflicts
+                {
+                    tempBitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                }
                 return memory.ToArray();
             }
         }
 
+        /*
         private void BroadcastFrameToClients(byte[] frameData)
         {
             byte[] frameSize = BitConverter.GetBytes(frameData.Length);
@@ -287,6 +362,34 @@ namespace VideoCall
                 {
                     clients.Remove(client);
                 }
+            }
+        }
+        */
+
+        public void BroadcastFrameToClients(byte[] frameBytes)
+        {
+            List<TcpClient> clientsToRemove = new List<TcpClient>();
+            // Iterate through clients list
+            foreach (TcpClient client in clients)
+            {
+                try
+                {
+                    NetworkStream stream = client.GetStream();
+                    stream.Write(frameBytes, 0, frameBytes.Length);
+                }
+                catch (IOException ex)
+                {
+                    // Mark this client for removal
+                    clientsToRemove.Add(client);
+                    // Optionally log the disconnect event
+                    Console.WriteLine($"Removing client: {ex.Message}");
+                }
+            }
+            // Remove and dispose of any clients that disconnected
+            foreach (TcpClient client in clientsToRemove)
+            {
+                client.Close();
+                clients.Remove(client);
             }
         }
 
@@ -347,64 +450,149 @@ namespace VideoCall
             });
         }
 
+        //private async Task ReceiveFramesFromClient(TcpClient client)
+        //{
+        //    try
+        //    {
+        //        while (client != null && client.Connected)
+        //        {
+        //            NetworkStream stream = client.GetStream();
+        //            byte[] frameSizeBytes = new byte[4];
+        //            int bytesRead = await stream.ReadAsync(frameSizeBytes, 0, frameSizeBytes.Length);
+        //            if (bytesRead != frameSizeBytes.Length)
+        //            {
+        //                continue;
+        //            }
 
-private async Task ReceiveFramesFromClient(TcpClient client)
-{
-    try
-    {
-        while (client != null && client.Connected)
+        //            int frameSize = BitConverter.ToInt32(frameSizeBytes, 0);
+        //            byte[] frameData = new byte[frameSize];
+        //            int totalBytesRead = 0;
+        //            while (totalBytesRead < frameSize)
+        //            {
+        //                bytesRead = await stream.ReadAsync(frameData, totalBytesRead, frameSize - totalBytesRead);
+        //                if (bytesRead == 0)
+        //                {
+        //                    break;
+        //                }
+        //                totalBytesRead += bytesRead;
+        //            }
+
+        //            if (totalBytesRead == frameSize)
+        //            {
+        //                Console.WriteLine("Received frame data from client.");
+        //                using (var bitmap = ByteArrayToBitmap(frameData))
+        //                {
+        //                    BitmapImage bitmapImage = BitmapToImageSource(bitmap);
+
+        //                    Dispatcher.BeginInvoke(new Action(() =>
+        //                    {
+        //                        // Display the video from the client
+        //                        MainVideoImage.Source = bitmapImage;
+        //                        Console.WriteLine("Frame displayed.");
+        //                    }));
+
+        //                    // Broadcast received frame to other clients, excluding the one it came from
+        //                    BroadcastFrameToClients(frameData, client);
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        Dispatcher.BeginInvoke(new Action(() =>
+        //        {
+        //            MessageBox.Show($"Error receiving frame from client: {ex.Message}");
+        //        }));
+        //    }
+        //}
+
+        private async Task ReceiveFramesFromClient(TcpClient client)
         {
-            NetworkStream stream = client.GetStream();
-            byte[] frameSizeBytes = new byte[4];
-            int bytesRead = await stream.ReadAsync(frameSizeBytes, 0, frameSizeBytes.Length);
-            if (bytesRead != frameSizeBytes.Length)
+            try
             {
-                continue;
-            }
-
-            int frameSize = BitConverter.ToInt32(frameSizeBytes, 0);
-            byte[] frameData = new byte[frameSize];
-            int totalBytesRead = 0;
-            while (totalBytesRead < frameSize)
-            {
-                bytesRead = await stream.ReadAsync(frameData, totalBytesRead, frameSize - totalBytesRead);
-                if (bytesRead == 0)
+                while (client != null && client.Connected)
                 {
-                    break;
-                }
-                totalBytesRead += bytesRead;
-            }
+                    NetworkStream stream = client.GetStream();
+                    byte[] frameSizeBytes = new byte[4];
+                    int bytesRead = await stream.ReadAsync(frameSizeBytes, 0, frameSizeBytes.Length);
+                    if (bytesRead != frameSizeBytes.Length) continue;
 
-            if (totalBytesRead == frameSize)
-            {
-                Console.WriteLine("Received frame data from client.");
-                using (var bitmap = ByteArrayToBitmap(frameData))
-                {
-                    BitmapImage bitmapImage = BitmapToImageSource(bitmap);
-
-                    Dispatcher.Invoke(() =>
+                    //int frameSize = BitConverter.ToInt32(frameSizeBytes, 0);
+                    int frameSize = BitConverter.ToInt32(frameSizeBytes, 0);
+                    if (frameSize <= 0 || frameSize > 10_000_000) // ~10MB sanity cap
                     {
-                        // Display the video from the client
-                        MainVideoGrid.Children.Clear();
-                        MainVideoGrid.Children.Add(new System.Windows.Controls.Image { Source = bitmapImage, Stretch = System.Windows.Media.Stretch.Fill });
-                        Console.WriteLine("Frame displayed.");
-                    });
+                        Dispatcher.Invoke(() =>
+                        {
+                            MessageBox.Show($"Invalid frame size: {frameSize} — possible corruption or overflow.");
+                        });
+                        break;
+                    }
 
-                    // Broadcast received frame to other clients
-                    BroadcastFrameToClients(frameData);
+                    byte[] frameData = new byte[frameSize];
+                    int totalBytesRead = 0;
+
+                    while (totalBytesRead < frameSize)
+                    {
+                        bytesRead = await stream.ReadAsync(frameData, totalBytesRead, frameSize - totalBytesRead);
+                        if (bytesRead == 0) break;
+                        totalBytesRead += bytesRead;
+                    }
+
+                    if (totalBytesRead == frameSize)
+                    {
+                        Console.WriteLine("Received frame data from client.");
+
+                        using (var bitmap = ByteArrayToBitmap(frameData))
+                        {
+                            BitmapImage bitmapImage = BitmapToImageSource(bitmap);
+                            bitmapImage.Freeze(); // Ensure it can be accessed across threads
+
+                            Dispatcher.Invoke(() =>
+                            {
+                                MainVideoImage.Source = bitmapImage;
+                                Console.WriteLine("Frame displayed.");
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.Invoke(() => MessageBox.Show($"Error receiving frame from client: {ex.Message}"));
+            }
+        }
+
+        /*
+        private void BroadcastFrameToClients(byte[] frameData, TcpClient senderClient)
+        {
+            byte[] frameSize = BitConverter.GetBytes(frameData.Length);
+            byte[] dataToSend = frameSize.Concat(frameData).ToArray();
+
+            foreach (var client in clients.ToList())
+            {
+                if (client.Connected && client != senderClient)
+                {
+                    try
+                    {
+                        NetworkStream stream = client.GetStream();
+                        stream.Write(dataToSend, 0, dataToSend.Length);
+                        Console.WriteLine("Frame sent to client.");
+                    }
+                    catch (Exception ex)
+                    {
+                        clients.Remove(client);
+                        Dispatcher.BeginInvoke(new Action(() => MessageBox.Show($"Error broadcasting frame to client: {ex.Message}")));
+                    }
+                }
+
+                else
+                {
+                    clients.Remove(client);
                 }
             }
         }
-    }
-    catch (Exception ex)
-    {
-        Dispatcher.Invoke(() =>
-        {
-            MessageBox.Show($"Error receiving frame from client: {ex.Message}");
-        });
-    }
-}
-
+        */
 
         private System.Drawing.Bitmap ByteArrayToBitmap(byte[] byteArray)
         {
@@ -414,11 +602,29 @@ private async Task ReceiveFramesFromClient(TcpClient client)
             }
         }
 
+        //private BitmapImage BitmapToImageSource(System.Drawing.Bitmap bitmap)
+        //{
+        //    using (var memory = new MemoryStream())
+        //    {
+        //        bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+        //        memory.Position = 0;
+        //        BitmapImage bitmapImage = new BitmapImage();
+        //        bitmapImage.BeginInit();
+        //        bitmapImage.StreamSource = memory;
+        //        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+        //        bitmapImage.EndInit();
+        //        return bitmapImage;
+        //    }
+        //}
+
         private BitmapImage BitmapToImageSource(System.Drawing.Bitmap bitmap)
         {
             using (var memory = new MemoryStream())
             {
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                using (var tempBitmap = new System.Drawing.Bitmap(bitmap)) // Clone it to prevent conflicts
+                {
+                    tempBitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                }
                 memory.Position = 0;
                 BitmapImage bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();
@@ -428,6 +634,7 @@ private async Task ReceiveFramesFromClient(TcpClient client)
                 return bitmapImage;
             }
         }
+
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -452,16 +659,36 @@ private async Task ReceiveFramesFromClient(TcpClient client)
             }
         }
 
+        //private byte[] CaptureFrame()
+        //{
+        //    lock (frameLock)
+        //    {
+        //        if (latestFrame != null)
+        //        {
+        //            return BitmapToByteArray(latestFrame);
+        //        }
+        //        return null;
+        //    }
+        //}
+
         private byte[] CaptureFrame()
         {
             lock (frameLock)
             {
                 if (latestFrame != null)
                 {
-                    return BitmapToByteArray(latestFrame);
+                    try
+                    {
+                        return BitmapToByteArray(latestFrame);
+                    }
+                    catch (Exception ex)
+                    {
+                        Dispatcher.Invoke(() => MessageBox.Show($"Error capturing frame: {ex.Message}"));
+                    }
                 }
                 return null;
             }
         }
+
     }
 }
